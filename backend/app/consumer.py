@@ -22,14 +22,14 @@ class DashConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         print ('>>>>',text_data)
-        # datapoint = json.loads(text_data)
-        # val =datapoint['value']
+        datapoint = json.loads(text_data)
+        val =datapoint['value']
 
         await self.channel_layer.group_send(
             self.groupname,
             {
                 'type':'deprocessing',
-                'value':text_data
+                'value':val
             }
         )
 
@@ -39,3 +39,49 @@ class DashConsumer(AsyncWebsocketConsumer):
     async def deprocessing(self,event):
         valOther=event['value']
         await self.send(text_data=json.dumps({'value':valOther+"ssss"}))
+
+
+
+class ChatConsumer(AsyncWebsocketConsumer):
+    
+    async def connect(self):
+        
+        print(self.scope['url_route']['kwargs']['usercode'])
+        
+
+        
+        self.groupname='dashboard'
+        await self.channel_layer.group_add(
+            self.groupname,
+            self.channel_name,
+        )
+
+        await self.accept()
+
+    async def disconnect(self,close_code):
+
+        await self.channel_layer.group_discard(
+            self.groupname,
+            self.channel_name
+        )
+    
+
+    async def receive(self, text_data):
+        print ('>>>>',text_data)
+        datapoint = json.loads(text_data)
+        val =datapoint['value']
+
+        await self.channel_layer.group_send(
+            self.groupname,
+            {
+                'type':'deprocessing',
+                'value':val
+            }
+        )
+
+
+        # pass
+
+    async def deprocessing(self,event):
+        valOther=event['value']
+        await self.send(text_data=json.dumps({'value':valOther}))

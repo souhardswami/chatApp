@@ -8,11 +8,13 @@ from app import consumer
 
 websocket_urlPattern=[
     path('ws/polData',consumer.DashConsumer),
+    path('ws/<str:usercode>',consumer.ChatConsumer)
 ]
 
 
 application = ProtocolTypeRouter({
     # (http->django views is added by default)
-    'websocket': AuthMiddlewareStack(URLRouter(websocket_urlPattern)),
+    'websocket': AuthMiddlewareStack(URLRouter(websocket_urlPattern)), 
+    
 
 })
