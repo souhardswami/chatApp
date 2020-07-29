@@ -1,31 +1,33 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Chat x Channels Rapidly</title>
+    <title>Chating app</title>
+    
+
     {% include 'css.html' %}
 </head>
 <body>
-
-<div class='container'>
-    <div class='row border-bottom my-3 py-3'>
-        <div class='col'>
-            <h1 class='p-0 m-0'>Chat x Channels Rapidly</h1>
-        </div>
-    </div>
+  
+<div class="container">
     
-<canvas id="myChart" width="400" height="200"></canvas>
-{% block content %}
+
+
+
+    
+{% include 'client.html' %}
+{% block client %}
 {% endblock %}
-</div>
+
+ </div>
+
 
 
 {% include 'js.html' %}
-{% block script %}
-{% endblock %}
 
 </body>
+
 
 </html>

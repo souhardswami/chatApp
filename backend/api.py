@@ -5,7 +5,6 @@ import time
 
 import random
 
-global json_data
 
 ws = websocket.WebSocket()
 ws.connect('ws://localhost:8000/ws/souhard')

@@ -1,12 +1,19 @@
 
-from django.shortcuts import render
-
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 
 
 
-def main(request):
-    # print(user)
-    return render(request,'app/index.html')
+
+def home(request):
+    if(request.method=='POST'):
+        user=request.POST['username']
+        return redirect(f'user/{user}')
+    return render(request,'app/home.html')
+
+def user(request,name):
+    content={
+        'name':name
+    }
+    return render(request,'app/index.html',{'content':content})
 
 

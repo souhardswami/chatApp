@@ -48,6 +48,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         print(self.scope['url_route']['kwargs']['usercode'])
         
+        
 
         
         self.groupname='dashboard'

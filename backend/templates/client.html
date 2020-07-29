@@ -1,0 +1,84 @@
+{% block client %}
+
+<script src="https://unpkg.com/vue"></script>
+
+
+<div id="app">
+    <div class="row border-bottom my-3 py-3">
+        <div class="col">
+          <h1 class='p-0 m-0'>Hi, {{content.name}}</h1>
+        </div>
+        <div class="col">
+          <button @click="createRoom">Create</button>
+        </div>
+        <div class="col">
+          <input type="text" value="Joining code">
+        </div>
+        
+      </div>
+  
+    <input v-model="msg" >
+
+    <button @click="sendmsg">sendmsg</button>
+
+   
+
+    <div v-for="msg in massages">
+        [[msg]]
+    </div>
+    
+</div>
+
+ 
+
+
+
+
+<script>
+
+  var vm=new Vue({
+    delimiters : ['[[',']]'],
+      el: '#app',
+      
+      data: { 
+          msg: 'Hello World!' ,
+          massages:[1,2,3,4],
+          socket: new WebSocket('ws://localhost:8000/ws/souhard')
+
+      },
+      methods:{
+        createRoom(){
+            
+            document.execCommand("copy");
+            alert("Your room id :" + this.msg);
+
+        },
+          
+        sendmsg(){
+           
+         
+          const target=this.msg
+
+          const socket=new WebSocket('ws://localhost:8000/ws/souhard')
+          
+          socket.onopen = function(e) {
+            socket.send(JSON.stringify({value:target}));
+            };
+          
+            this.msg=''
+        }
+      },
+      mounted(){
+        
+        this.socket.onmessage = function(e) {
+            const data=JSON.parse(e.data)
+            this.massages.push(data.value)
+            
+            
+      
+    }.bind(this)
+      }
+  })
+</script>
+
+{% endblock %}
