@@ -7,7 +7,7 @@ from app import consumer
 
 
 websocket_urlPattern=[
-    path('ws/polData',consumer.DashConsumer),
+    path('ws/join',consumer.JoinConsumer),
     path('ws/<str:usercode>',consumer.ChatConsumer)
 ]
 

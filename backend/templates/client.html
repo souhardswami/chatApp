@@ -9,11 +9,25 @@
           <h1 class='p-0 m-0'>Hi, {{content.name}}</h1>
         </div>
         <div class="col">
-          <button @click="createRoom">Create</button>
+          
+          <div class="alert alert-primary" role="alert">
+            <h6 class='p-0 m-0'>{{content.joining_code}}</h6>
+          </div>
         </div>
-        <div class="col">
-          <input type="text" value="Joining code">
-        </div>
+        <form action="{{content.name}}/createroom" method="POST">
+          {% csrf_token %}
+          <div class="col">
+            <button type="submit">creat</button>
+          </div>
+        </form>
+        <!-- <form action="/messages/join" method="POST">
+          {% csrf_token %} -->
+          <div class="col">
+            <input type="text" value="Joiningcode" name="joining_code" v-model="joiningcode">
+            
+            <button @click="joinGroup">Join</button>
+          </div>
+        <!-- </form>  -->
         
       </div>
   
@@ -36,23 +50,58 @@
 
 <script>
 
+
   var vm=new Vue({
     delimiters : ['[[',']]'],
       el: '#app',
       
       data: { 
-          msg: 'Hello World!' ,
+        
+          msg:'your massage',
           massages:[1,2,3,4],
-          socket: new WebSocket('ws://localhost:8000/ws/souhard')
+          socket: new WebSocket('ws://localhost:8000/ws/souhard'),
+          socket2: new WebSocket('ws://localhost:8000/ws/join'),
+
+
+          user: "{{content.name}}",
+          joiningcode:"enter code"
+
 
       },
       methods:{
-        createRoom(){
+        joinGroup(){
+
+          console.log(this.joiningcode,this.user);
+          
+          const socket2=new WebSocket('ws://localhost:8000/ws/join')
+
+          socket2.onopen=function(e){
+
+            socket2.send(JSON.stringify({
+                        joincode:this.joiningcode,
+                        joiner:this.user
+              }))
+
+          }.bind(this)
             
-            document.execCommand("copy");
-            alert("Your room id :" + this.msg);
+        },
+
+        getJoinmsg(){
+
+          this.socket2.onmessage = function(e) {
+            console.log('get')
+            console.log(e);
+            
+
+                    const data=JSON.parse(e.data)
+                    console.log(data)
+                    
+                    
+              
+            }.bind(this)
 
         },
+        
           
         sendmsg(){
            
@@ -66,17 +115,24 @@
             };
           
             this.msg=''
+        },
+
+        getmsg(){
+
+          this.socket.onmessage = function(e) {
+                    const data=JSON.parse(e.data)
+                    this.massages.push(data.value)
+                    
+                    
+              
+            }.bind(this)
+
         }
       },
       mounted(){
-        
-        this.socket.onmessage = function(e) {
-            const data=JSON.parse(e.data)
-            this.massages.push(data.value)
-            
-            
-      
-    }.bind(this)
+            this.getmsg()
+            this.getJoinmsg()
+                
       }
   })
 </script>
