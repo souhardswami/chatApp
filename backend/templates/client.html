@@ -1,8 +1,5 @@
 {% block client %}
-
 <script src="https://unpkg.com/vue"></script>
-
-
 <div id="app">
     <div class="row border-bottom my-3 py-3">
         <div class="col">
@@ -38,8 +35,15 @@
    
 
     <div v-for="msg in massages">
-        [[msg]]
+        
+        <div class="container">
+          <img src="https://source.unsplash.com/user/erondu/60x60" alt="Avatar" class="right">
+          <p>Hello. How are you today?</p>
+          <span class="time-right">11:00</span>
+        </div>
     </div>
+
+    
     
 </div>
 

@@ -6,26 +6,26 @@
 
     <title>Chating app</title>
     
-
-    {% include 'css.html' %}
+    
+    {% include 'css.html' %} 
 </head>
 <body>
   
-<div class="container">
-    
+
+ <div class="container">
+    {% include 'client.html' %}
+    {% block client %}
+    {% endblock  %}
+
+</div>
+
+  
 
 
 
-    
-{% include 'client.html' %}
-{% block client %}
-{% endblock %}
-
- </div>
+ {% include 'js.html' %} 
 
 
-
-{% include 'js.html' %}
 
 </body>
 
