@@ -35,12 +35,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print ('>>>>',text_data)
         datapoint = json.loads(text_data)
         val =datapoint['value']
+        sender=datapoint['sender']
+
+
+        join=JoinCode.objects.get(creater__name=sender)
+        print(join.joiner)
+
+        reciever=str(join.joiner)
 
         await self.channel_layer.group_send(
             self.groupname,
             {
                 'type':'deprocessing',
-                'value':val
+                'value':val,
+                'sender':sender,
+                'reciever':reciever
             }
         )
 
@@ -48,9 +57,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # pass
 
     async def deprocessing(self,event):
-        valOther=event['value']
+        value=event['value']
+        sender=event['sender']
+        reciever=event['reciever']
+    
         print("fake")
-        await self.send(text_data=json.dumps({'value':valOther}))
+        await self.send(text_data=json.dumps({
+            'value':value,
+            'sender':sender,
+            'reciever':reciever
+
+            }))
 
 
 
@@ -104,6 +121,9 @@ class JoinConsumer(AsyncWebsocketConsumer):
             
 
             # if user and joiner are same
+            print(join_table)
+
+            
 
             
             if(str(join_table[0].joiner)==str(anotheruser)):
@@ -116,10 +136,23 @@ class JoinConsumer(AsyncWebsocketConsumer):
 
                 join_table.update(joiner=new_user)
 
+
+                print("joiner.........",joiner,sep=" ")
+
+                joiner_table=JoinCode.objects.filter(creater__name=joiner)
+                print("joining table................",joiner_table[0].creater,sep=" ")
+
+                me=User.objects.get(name=anotheruser)
+                print(me)
+                joiner_table.update(joiner=me)
+
+
                 val='joined'
             else:
-                
-                val='already joined'
+                if(str(join_table[0].joiner)==str(joiner)):
+                    val='already joined'
+                else:
+                    val='room is Full'
         
 
         else:

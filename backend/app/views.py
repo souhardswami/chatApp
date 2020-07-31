@@ -26,26 +26,14 @@ def user(request,name):
         random_hash=random_hash_obj.get_hash()
 
         user_obj.update(joining_code=random_hash)
-        
-
-
-
-        
-
-
-        
-
-
-        
-
-
-        
     
     else:
         random_hash_obj=Hash(name)
         random_hash=random_hash_obj.get_hash()
         user_obj=User.objects.create(name=name,joining_code=random_hash)
         user_obj.save()
+        join_code_table=JoinCode.objects.create(creater=user_obj,joiner=user_obj)
+        join_code_table.save()
         
  
     
@@ -55,12 +43,6 @@ def user(request,name):
         'joining_code':random_hash
     }
     return render(request,'app/index.html',{'content':content})
-
-
-
-        
-
-    
 
     
 def createroom(request,name):

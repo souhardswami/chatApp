@@ -36,9 +36,14 @@
 
     <div v-for="msg in massages">
         
-        <div class="container">
-          <img src="https://source.unsplash.com/user/erondu/60x60" alt="Avatar" class="right">
-          <p>Hello. How are you today?</p>
+        <div v-if="user==msg.sender" class="container">
+          <img src="https://source.unsplash.com/user/sender" alt="Avatar" class="right">
+          <p>[[msg.value]]</p>
+          <span class="time-right">11:00</span>
+        </div>
+        <div v-else class="container">
+          <img src="https://source.unsplash.com/user/sender" alt="Avatar" >
+          <p>[[msg.value]]</p>
           <span class="time-right">11:00</span>
         </div>
     </div>
@@ -62,7 +67,7 @@
       data: { 
         
           msg:'your massage',
-          massages:[1,2,3,4],
+          massages:[],
           socket: new WebSocket('ws://localhost:8000/ws/souhard'),
           socket2: new WebSocket('ws://localhost:8000/ws/join'),
 
@@ -94,6 +99,7 @@
 
           this.socket2.onmessage = function(e) {
             console.log('get')
+            this.msg
             console.log(e);
             
 
@@ -110,22 +116,27 @@
         sendmsg(){
            
          
-          const target=this.msg
-
+          console.log('click');
+          
           const socket=new WebSocket('ws://localhost:8000/ws/souhard')
-          
           socket.onopen = function(e) {
-            socket.send(JSON.stringify({value:target}));
-            };
-          
-            this.msg=''
+            socket.send(JSON.stringify({
+              value:this.msg,
+              sender:this.user
+              }));
+            }.bind(this);
         },
 
         getmsg(){
-
+          
           this.socket.onmessage = function(e) {
                     const data=JSON.parse(e.data)
-                    this.massages.push(data.value)
+                    if(data.sender==this.user || data.reciever==this.user){
+                        this.massages.push(data)
+                    }
+                    console.log(data);
+                    
+                    
                     
                     
               
