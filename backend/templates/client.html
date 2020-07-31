@@ -37,12 +37,12 @@
     <div v-for="msg in massages">
         
         <div v-if="user==msg.sender" class="container">
-          <img src="https://source.unsplash.com/user/sender" alt="Avatar" class="right">
+          <img :src='"https://picsum.photos/id/"+me+"/60/60"' alt="Avatar" class="right">
           <p>[[msg.value]]</p>
           <span class="time-right">11:00</span>
         </div>
         <div v-else class="container">
-          <img src="https://source.unsplash.com/user/sender" alt="Avatar" >
+          <img :src='"https://picsum.photos/id/"+friend+"/60/60"' alt="Avatar" >
           <p>[[msg.value]]</p>
           <span class="time-right">11:00</span>
         </div>
@@ -73,11 +73,46 @@
 
 
           user: "{{content.name}}",
-          joiningcode:"enter code"
+          joiningcode:"enter code",
 
 
       },
+
+      computed:{
+
+        me(){           
+            const INPUT=this.user
+            let hash = 0
+            const len = INPUT.length;
+            for (let i = 0; i < len; i++) {
+                          hash  = ((hash << 5) - hash) + INPUT.charCodeAt(i)
+                          hash |= 0;
+            }
+            return Math.abs(hash)%100
+            
+        },
+        friend(){
+            
+            const INPUT_arr=this.massages.filter(val=> (val.sender!=this.user || val.reciever!=this.user))[0]
+            console.log(INPUT_arr)
+            
+            let INPUT=''
+            if(this.user!=INPUT_arr.sender){INPUT=INPUT_arr.sender}
+            else{INPUT=INPUT_arr.reciever}
+            let hash = 0
+            const len = INPUT.length;
+            for (let i = 0; i < len; i++) {
+                          hash  = ((hash << 5) - hash) + INPUT.charCodeAt(i)
+                          hash |= 0;
+            }
+            return Math.abs(hash)%100
+        }
+        
+      },
       methods:{
+        
+                        
+        
         joinGroup(){
 
           console.log(this.joiningcode,this.user);
