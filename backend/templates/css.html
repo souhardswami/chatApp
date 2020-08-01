@@ -1,18 +1,58 @@
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
 <style>
+
+body{
+    height: 100vh;
+    overflow: hidden;
+  }
+
+.container{
+  width:50%;
+  background-color: #f1f1f1;
+  border: solid 10px black;
+  border-radius: 30px;
+}
 #base{
 
-  margin:30px auto;
+  margin:60px auto;
+
 }
 
-.container {
-  border: 2px solid #dedede;
-  background-color: #f1f1f1;
+#chatwindow{
+  margin-top:30px;
+    height: 60vh;
+    overflow-x: scroll;
+
+
+
+}
+
+#chatwindow::-webkit-scrollbar{
+            width:0px;
+      }
+
+.msgpannel {
+  
+  
   border-radius: 5px;
   padding: 10px;
   margin: 10px 0;
+  
 
+}
+.left{
+  border: 2px solid #dedede;
+  background-color:white;
+  width:60%;
+
+}
+.right{
+  margin-left: 40%;
+  border: 2px solid blue;
+  background-color:blueviolet ;
+  width:60%;
+  color:white;
 }
 
 .darker {
@@ -28,7 +68,7 @@
 
 .container img {
   float: left;
-  max-width: 60px;
+  max-width: 30px;
   width: 100%;
   margin-right: 20px;
   border-radius: 50%;
@@ -39,15 +79,16 @@
   margin-left: 20px;
   margin-right:0;
 }
+.time-left {
+  /* float: left; */
+  
+  color:#322F3D;
+}
 
 .time-right {
-  float: right;
-  color: #aaa;
+  color: #999;
+  
 }
 
-.time-left {
-  float: left;
-  color: #999;
-}
 
 </style>

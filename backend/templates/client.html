@@ -33,20 +33,21 @@
     <button @click="sendmsg">sendmsg</button>
 
    
-
-    <div v-for="msg in massages">
-        
-        <div v-if="user==msg.sender" class="container">
-          <img :src='"https://picsum.photos/id/"+me+"/60/60"' alt="Avatar" class="right">
-          <p>[[msg.value]]</p>
-          <span class="time-right">11:00</span>
+    <div id="chatwindow">
+        <div v-for="msg in massages" >
+            
+            <div v-if="user==msg.sender" class="msgpannel right" >
+              <img :src='"https://picsum.photos/id/"+me+"/60/60"' alt="Avatar" class="right">
+              <p>[[msg.value]]</p>
+              <span class="time-right">@ me</span>
+            </div>
+            <div v-else class="msgpannel left">
+              <img :src='"https://picsum.photos/id/"+friend+"/60/60"' alt="Avatar" >
+              <p>[[msg.value]]</p>
+              <span class="time-left">@ [[friendname]]</span>
+            </div>
         </div>
-        <div v-else class="container">
-          <img :src='"https://picsum.photos/id/"+friend+"/60/60"' alt="Avatar" >
-          <p>[[msg.value]]</p>
-          <span class="time-right">11:00</span>
-        </div>
-    </div>
+  </div>
 
     
     
@@ -106,7 +107,17 @@
                           hash |= 0;
             }
             return Math.abs(hash)%100
+        },
+        friendname(){
+          const INPUT_arr=this.massages.filter(val=> (val.sender!=this.user || val.reciever!=this.user))[0]
+          console.log(INPUT_arr)
+          let INPUT=''
+          if(this.user!=INPUT_arr.sender){INPUT=INPUT_arr.sender}
+          else{INPUT=INPUT_arr.reciever}
+          return INPUT
+
         }
+        
         
       },
       methods:{
