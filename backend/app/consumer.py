@@ -6,11 +6,15 @@ from app.models import User,JoinCode
 
 
 
+
+
+
 class ChatConsumer(AsyncWebsocketConsumer):
     
     async def connect(self):
         
         print(self.scope['url_route']['kwargs']['usercode'])
+
         
         
 
@@ -24,6 +28,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self,close_code):
+
+        print("disconnect")
+
+        disconnected_user=self.scope['url_route']['kwargs']['usercode']
+
+
+        first_user=JoinCode.objects.filter(creater__name=disconnected_user)
+
+        print(first_user)
+        another_user=first_user[0].joiner
+        print(another_user)
+
+        first_user_object=User.objects.get(name=disconnected_user)
+        print(first_user_object)
+        first_user.update(joiner=first_user_object)
+        print("jnjjjn")
+
+        another_user_table=JoinCode.objects.filter(creater__name=another_user)
+
+        another_user_object=User.objects.get(name=another_user)
+
+        another_user_table.update(joiner=another_user_object)
+            
 
         await self.channel_layer.group_discard(
             self.groupname,
@@ -94,6 +121,8 @@ class JoinConsumer(AsyncWebsocketConsumer):
         )
     
 
+    
+
     async def receive(self, text_data):
         print ('>>>>',text_data)
         datapoint = json.loads(text_data)
@@ -106,7 +135,6 @@ class JoinConsumer(AsyncWebsocketConsumer):
         
 
         joining_code_check=User.objects.filter(joining_code=joining_code)
-
         print(joining_code_check)
 
         if(joining_code_check.exists()):
@@ -147,16 +175,16 @@ class JoinConsumer(AsyncWebsocketConsumer):
                 joiner_table.update(joiner=me)
 
 
-                val='joined'
+                val='✓ joined'
             else:
                 if(str(join_table[0].joiner)==str(joiner)):
-                    val='already joined'
+                    val='✓ already joined'
                 else:
-                    val='room is Full'
+                    val='✕ room is Full'
         
 
         else:
-            val='given code doesn\'t exist'
+            val='✕ given code doesn\'t exist'
 
 
         await self.channel_layer.group_send(

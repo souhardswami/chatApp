@@ -14,23 +14,23 @@
         <form action="{{content.name}}/createroom" method="POST">
           {% csrf_token %}
           <div class="col">
-            <button type="submit">creat</button>
+            <button type="submit">new</button>
           </div>
         </form>
-        <!-- <form action="/messages/join" method="POST">
-          {% csrf_token %} -->
+        
           <div class="col">
             <input type="text" value="Joiningcode" name="joining_code" v-model="joiningcode">
             
             <button @click="joinGroup">Join</button>
+            <span>[[status]]</span>
           </div>
-        <!-- </form>  -->
+          
         
       </div>
   
-    <input v-model="msg" >
+    
 
-    <button @click="sendmsg">sendmsg</button>
+    
 
    
     <div id="chatwindow">
@@ -39,15 +39,18 @@
             <div v-if="user==msg.sender" class="msgpannel right" >
               <img :src='"https://picsum.photos/id/"+me+"/60/60"' alt="Avatar" class="right">
               <p>[[msg.value]]</p>
-              <span class="time-right">@ me</span>
+              <span class="user-right">@ me</span>
             </div>
             <div v-else class="msgpannel left">
               <img :src='"https://picsum.photos/id/"+friend+"/60/60"' alt="Avatar" >
               <p>[[msg.value]]</p>
-              <span class="time-left">@ [[friendname]]</span>
+              <span class="user-left">@ [[friendname]]</span>
             </div>
         </div>
   </div>
+  <hr>
+          <input v-model="msg" id="inputmsg" @keyup.enter="sendmsg">
+          <!-- <button @click="sendmsg">sendmsg</button> -->
 
     
     
@@ -67,21 +70,20 @@
       
       data: { 
         
-          msg:'your massage',
+          msg:'MESSAGE',
           massages:[],
-          socket: new WebSocket('ws://localhost:8000/ws/souhard'),
+          socket: new WebSocket('ws://localhost:8000/ws/{{content.name}}'),
           socket2: new WebSocket('ws://localhost:8000/ws/join'),
 
 
           user: "{{content.name}}",
           joiningcode:"enter code",
+          status:'Panding'
 
 
       },
-
       computed:{
-
-        me(){           
+          me(){           
             const INPUT=this.user
             let hash = 0
             const len = INPUT.length;
@@ -135,7 +137,8 @@
             socket2.send(JSON.stringify({
                         joincode:this.joiningcode,
                         joiner:this.user
-              }))
+              }),
+              this.joiningcode='enter code')
 
           }.bind(this)
             
@@ -145,12 +148,12 @@
 
           this.socket2.onmessage = function(e) {
             console.log('get')
-            this.msg
             console.log(e);
             
 
                     const data=JSON.parse(e.data)
                     console.log(data)
+                    this.status=data.value
                     
                     
               
@@ -164,12 +167,13 @@
          
           console.log('click');
           
-          const socket=new WebSocket('ws://localhost:8000/ws/souhard')
+          const socket=new WebSocket('ws://localhost:8000/ws/{{content.name}}')
           socket.onopen = function(e) {
             socket.send(JSON.stringify({
               value:this.msg,
               sender:this.user
-              }));
+              }),
+              this.msg='MESSAGE');
             }.bind(this);
         },
 
@@ -194,7 +198,8 @@
             this.getmsg()
             this.getJoinmsg()
                 
-      }
+      },
+
   })
 </script>
 
