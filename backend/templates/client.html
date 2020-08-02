@@ -149,11 +149,31 @@
           this.socket2.onmessage = function(e) {
             console.log('get')
             console.log(e);
-            
+            const data=JSON.parse(e.data)
 
-                    const data=JSON.parse(e.data)
+            if(this.user==data.joiner || this.user==data.user){
+
                     console.log(data)
-                    this.status=data.value
+                    if(data.value=='✓ joined'){
+                              if(this.user==data.joiner){
+                                     this.status=data.value+" with "+data.user
+                                }
+                                else{
+                                         this.status=data.value+ " "+data.joiner
+                                }
+                                }
+                    else if(data.value=='✓ already joined'){
+                                 if(this.user==data.joiner){
+                                          this.status=data.value+" with "+data.user
+                                      }
+                                      }
+                    else{
+                      if(this.user==data.joiner){
+                                          this.status=data.value
+                                      }
+
+                    }
+            }
                     
                     
               

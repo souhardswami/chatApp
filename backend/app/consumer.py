@@ -177,13 +177,16 @@ class JoinConsumer(AsyncWebsocketConsumer):
 
                 val='✓ joined'
             else:
+                anotheruser=''
                 if(str(join_table[0].joiner)==str(joiner)):
                     val='✓ already joined'
+
                 else:
                     val='✕ room is Full'
         
 
         else:
+            anotheruser=''
             val='✕ given code doesn\'t exist'
 
 
@@ -191,7 +194,9 @@ class JoinConsumer(AsyncWebsocketConsumer):
             self.groupname,
             {
                 'type':'deprocessing',
-                'value':val
+                'value':val,
+                'joiner':joiner,
+                'user':anotheruser
             }
         )
 
@@ -200,6 +205,13 @@ class JoinConsumer(AsyncWebsocketConsumer):
 
     async def deprocessing(self,event):
         valOther=event['value']
+        joinerOther=event['joiner']
+        userother=event['user']
         print(valOther)
         print("ori")
-        await self.send(text_data=json.dumps({'value':valOther}))
+
+        await self.send(text_data=json.dumps({
+            'value':valOther,
+            'joiner':joinerOther,
+            'user':userother
+            }))
