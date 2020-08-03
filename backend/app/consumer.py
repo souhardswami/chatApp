@@ -50,12 +50,41 @@ class ChatConsumer(AsyncWebsocketConsumer):
         another_user_object=User.objects.get(name=another_user)
 
         another_user_table.update(joiner=another_user_object)
-            
+
+        d={
+            'value':'disconnect',
+            'sender':disconnected_user,
+            'joiner':str(another_user)
+        }
+        print(d)
+
+        await self.fake(json.dumps(d))
 
         await self.channel_layer.group_discard(
             self.groupname,
             self.channel_name
         )
+    
+
+    async def fake(self, text_data):
+        print("here")
+        datapoint = json.loads(text_data)
+        val =datapoint['value']
+        sender=datapoint['sender']
+        reciever=datapoint['joiner']
+        print("hat")
+
+
+        await self.channel_layer.group_send(
+            self.groupname,
+            {
+                'type':'deprocessing',
+                'value':val,
+                'sender':sender,
+                'reciever':reciever
+            }
+        )
+
     
 
     async def receive(self, text_data):
@@ -69,6 +98,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(join.joiner)
 
         reciever=str(join.joiner)
+        if(sender==reciever):
+            return 
 
         await self.channel_layer.group_send(
             self.groupname,
@@ -87,6 +118,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         value=event['value']
         sender=event['sender']
         reciever=event['reciever']
+
+        print(sender,reciever)
     
         print("fake")
         await self.send(text_data=json.dumps({
