@@ -50,7 +50,6 @@
   </div>
   <hr>
           <input v-model="msg" id="inputmsg" @keyup.enter="sendmsg">
-          <!-- <button @click="sendmsg">sendmsg</button> -->
 
     
     
@@ -79,8 +78,6 @@
           user: "{{content.name}}",
           joiningcode:"enter code",
           status:'Panding'
-
-
       },
       computed:{
           me(){           
@@ -101,8 +98,6 @@
 
 
         friend(val){
-          console.log(val)
-          console.log("nbjnbjnbjn")
           const INPUT=val
           
           let hash = 0
@@ -117,13 +112,8 @@
                         
         
         joinGroup(){
-
-          console.log(this.joiningcode,this.user);
-          
           const socket2=new WebSocket('ws://localhost:8000/ws/join')
-
           socket2.onopen=function(e){
-
             socket2.send(JSON.stringify({
                         joincode:this.joiningcode,
                         joiner:this.user
@@ -137,13 +127,10 @@
         getJoinmsg(){
 
           this.socket2.onmessage = function(e) {
-            console.log('get')
-            console.log(e);
             const data=JSON.parse(e.data)
 
             if(this.user==data.joiner || this.user==data.user){
 
-                    console.log(data)
                     if(data.value=='✓ joined'){
                               if(this.user==data.joiner){
                                      this.status=data.value+" with "+data.user
@@ -173,9 +160,6 @@
         
           
         sendmsg(){
-           
-         
-          console.log('click');
           
           const socket=new WebSocket('ws://localhost:8000/ws/{{content.name}}')
           socket.onopen = function(e) {
@@ -188,13 +172,8 @@
         },
 
         getmsg(){
-
-          console.log("souhard");
-          
-          
           this.socket.onmessage = function(e) {
                     const data=JSON.parse(e.data)
-                    console.log(data);
                           if(data.value!='disconnect'){
                                   if(data.sender==this.user || data.reciever==this.user){
 
@@ -202,8 +181,6 @@
                                     else{data.friend=data.reciever}
                         
                                       this.massages.push(data)
-
-                                      console.log(this.massages)
                                   }
                             }
                             else{

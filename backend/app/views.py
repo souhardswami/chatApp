@@ -46,8 +46,6 @@ def user(request,name):
 
     
 def createroom(request,name):
-    print("bhhbhhh")
-    print(name)
 
     return redirect(f'/messages/user/{name}')
 
