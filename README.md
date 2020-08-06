@@ -36,6 +36,7 @@ An async  is a function declared with the async keyword. Async functions are ins
 ## Installation
 
 Please refer to Django [documentation](https://docs.djangoproject.com/en/1.9/intro/overview/#install-it) for more details.
+
 for this project refer this Django-channel [documentation](https://channels.readthedocs.io/en/latest/introduction.html) to get more info.
 
 * clone this project 
@@ -44,7 +45,7 @@ for this project refer this Django-channel [documentation](https://channels.read
 git clone git@github.com:souhardswami/chatApp.git
 ```
 
-move to  root directory
+* move to  root directory
 ```
 cd chatApp
 ```
@@ -54,7 +55,7 @@ cd chatApp
 ```
 python3 -m venv myenv
 cd myenv/Scripts
-soutce activate
+source activate
 cd ../..
 ```
 
@@ -66,7 +67,7 @@ pip install -r requirements.txt
 # Run
 ```
 python manage.py makemigrations
-python manage.py makemigrate
+python manage.py migrate
 python manage.py runserver
 
 ```
@@ -79,6 +80,14 @@ python manage.py runserver
 
 - database access in async mode
 - user authentication
+
+## extra source
+
+
+More about redis server [documentation](https://pypi.org/project/channels-redis/)
+
+
+
 
 
 
